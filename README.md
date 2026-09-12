@@ -1,14 +1,23 @@
 # Outreach
+Building something to make outreach a bit simpler.
 
-A Chrome extension (Manifest V3) for saving the LinkedIn profile you're viewing.
-Click the toolbar icon, then **Capture profile** to get the person's name and
-LinkedIn URL as JSON. Nothing runs until you click the button.
+## Chrome extension
 
-## Run locally
+React + TypeScript, built with Vite. Source lives in `chromeExtension/src/`;
+`chromeExtension/public/manifest.json` is copied into the build as-is.
 
-1. Open `chrome://extensions` in Chrome.
-2. Turn on **Developer mode** (top right).
-3. Click **Load unpacked** and select the `chromeExtension/` folder.
+### Run locally
+
+1. Build it:
+   ```bash
+   cd chromeExtension
+   npm install
+   npm run build
+   ```
+2. Open `chrome://extensions` in Chrome and turn on **Developer mode** (top right).
+3. Click **Load unpacked** and select the `chromeExtension/dist/` folder.
 4. Pin the extension from the puzzle-piece menu, then click its icon to open the popup.
 
-After editing files, click the reload icon on the extension's card in `chrome://extensions`.
+While developing, run `npm run dev` to rebuild on every save, then click the
+reload icon on the extension's card in `chrome://extensions` to pick up changes.
+`npm run typecheck` runs the TypeScript checker.
