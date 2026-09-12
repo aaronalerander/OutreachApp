@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { extractProfile } from "../BE/main/linkedin";
-import { isProfileUrl } from "../BE/main/utils";
+import { extractProfile } from "../content/linkedin";
+import { isProfileUrl } from "../shared/utils";
 
 export function App() {
   const [output, setOutput] = useState<string | null>(null);

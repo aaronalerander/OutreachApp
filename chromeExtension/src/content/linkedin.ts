@@ -1,4 +1,4 @@
-import type { LinkedInProfile } from "./types";
+import type { LinkedInProfile } from "../shared/types";
 
 // Injected into the LinkedIn tab with chrome.scripting.executeScript, which
 // serializes the function's source. It must not reference anything outside
