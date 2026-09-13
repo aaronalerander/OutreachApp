@@ -42,10 +42,6 @@ npm run dev     # server on http://localhost:3000, restarts on save
 Migrations run automatically when the server starts. `npm run db:down` stops Postgres
 (your data is kept). `npm run db:studio` opens a browser view of the database.
 
-### Endpoints
-
-- `GET /health` checks the server and database connection.
-
 ### Changing the database
 
 1. Define tables in `backend/src/db/schema.ts`.

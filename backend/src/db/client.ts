@@ -1,6 +1,4 @@
-import { existsSync } from "node:fs";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { migrate } from "drizzle-orm/node-postgres/migrator";
 import pg from "pg";
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -11,11 +9,13 @@ if (!databaseUrl) {
 }
 
 export const pool = new pg.Pool({ connectionString: databaseUrl });
+
 export const db = drizzle(pool);
 
-// Applies any migrations in drizzle/ that haven't run against this database yet.
-// Skips until the first migration is generated (drizzle-kit creates the journal).
-export async function runDBMigrations() {
-  if (!existsSync("drizzle/meta/_journal.json")) return;
-  await migrate(db, { migrationsFolder: "drizzle" });
-}
+// If the database drops an idle connection (e.g. it restarts), pg emits an
+// error on the pool. Without a listener, Node treats that as fatal and the
+// server crashes. Log it instead; the pool opens a fresh connection the next time a db request comes through.
+pool.on("error", (error) => {
+  console.error("Idle database connection closed:", error.message);
+});
+

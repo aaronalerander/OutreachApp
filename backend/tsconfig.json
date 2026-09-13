@@ -3,11 +3,18 @@
     "target": "ES2023",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "rootDir": "src",
     "outDir": "dist",
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "customConditions": [
+      "development"
+    ]
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }
