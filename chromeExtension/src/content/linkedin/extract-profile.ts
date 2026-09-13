@@ -1,4 +1,4 @@
-import type { LinkedInProfile } from "../shared/types";
+import type { LinkedInProfile } from "@/types/linkedin/linkedin-types";
 
 export function extractProfile(): LinkedInProfile {
   const slug = location.pathname.match(/^\/in\/([^/]+)/)?.[1];

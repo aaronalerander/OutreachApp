@@ -1,36 +1,46 @@
 import { useState } from "react";
-import { extractProfile } from "../content/linkedin";
-import { isProfileUrl } from "../shared/utils";
+import { checkDbHealth, checkServerHealth } from "@/api/be/infrastructure-health/api";
+import { extractLinkedinProfile } from "@/api/fe/linkedin/extract-linkedin-profile";
 
 export function App() {
   const [output, setOutput] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  async function capture() {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
+  function showOutput(data: unknown) {
+    setError(null);
+    setOutput(JSON.stringify(data, null, 2));
+  }
 
-    if (tab?.id === undefined || !isProfileUrl(tab.url)) {
-      setOutput("Open a LinkedIn profile (linkedin.com/in/...) first.");
-      return;
-    }
+  function handleError(userFriendlyMessage: string) {
+    setOutput(null);
+    setError(userFriendlyMessage);
+  }
 
-    try {
-      const [injection] = await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: extractProfile,
-      });
-      setOutput(JSON.stringify(injection.result, null, 2));
-    } catch (error) {
-      setOutput(`Couldn't read this page: ${String(error)}`);
-    }
+  async function onCaptureProfile() {
+    const res = await extractLinkedinProfile();
+    if (!res.ok) return handleError(res.userFriendlyMessage);
+    showOutput(res.data);
+  }
+
+  async function onCheckServerHealth() {
+    const res = await checkServerHealth();
+    if (!res.ok) return handleError(res.userFriendlyMessage);
+    showOutput(res.data);
+  }
+
+  async function onCheckDbHealth() {
+    const res = await checkDbHealth();
+    if (!res.ok) return handleError(res.userFriendlyMessage);
+    showOutput(res.data);
   }
 
   return (
     <>
       <h1>Outreach</h1>
-      <button onClick={capture}>Capture profile</button>
+      <button onClick={onCaptureProfile}>Capture profile</button>
+      <button onClick={onCheckServerHealth}>Check server health</button>
+      <button onClick={onCheckDbHealth}>Check DB health</button>
+      {error && <p className="error">{error}</p>}
       {output && <pre>{output}</pre>}
     </>
   );

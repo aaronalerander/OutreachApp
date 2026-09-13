@@ -21,6 +21,10 @@ button {
   cursor: pointer;
 }
 
+button + button {
+  margin-top: 8px;
+}
+
 button:hover {
   background: #004182;
 }
@@ -34,4 +38,10 @@ pre {
 
 pre:empty {
   display: none;
+}
+
+.error {
+  margin: 12px 0 0;
+  color: #b42318;
+  font-size: 13px;
 }
