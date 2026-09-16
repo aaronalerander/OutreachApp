@@ -10,7 +10,7 @@ if (!databaseUrl) {
 
 export const pool = new pg.Pool({ connectionString: databaseUrl });
 
-export const db = drizzle(pool);
+export const db = drizzle(pool, { casing: "snake_case" });
 
 // If the database drops an idle connection (e.g. it restarts), pg emits an
 // error on the pool. Without a listener, Node treats that as fatal and the
@@ -18,4 +18,3 @@ export const db = drizzle(pool);
 pool.on("error", (error) => {
   console.error("Idle database connection closed:", error.message);
 });
-

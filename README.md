@@ -44,7 +44,8 @@ Migrations run automatically when the server starts. `npm run db:down` stops Pos
 
 ### Changing the database
 
-1. Define tables in `backend/src/db/schema.ts`.
+1. Edit or add a table in `backend/src/db/schema/` (one file per table). Document it and
+   add a changelog entry; see `backend/src/db/schema/CLAUDE.md`.
 2. Run `npm run db:generate -- --name describe_the_change`. This writes a new SQL file in `backend/drizzle/`.
 3. Restart `npm run dev` to apply it. Commit the SQL file; Railway applies it on the next deploy.
 
