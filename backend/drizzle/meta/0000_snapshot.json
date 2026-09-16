@@ -1,0 +1,635 @@
+{
+  "id": "a1d5bc4e-3b3c-48bb-8b08-411a69850417",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.companies": {
+      "name": "companies",
+      "schema": "",
+      "columns": {
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "entity_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'COMPANY'"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "companies_entity_id_entity_type_entities_id_type_fk": {
+          "name": "companies_entity_id_entity_type_entities_id_type_fk",
+          "tableFrom": "companies",
+          "tableTo": "entities",
+          "columnsFrom": [
+            "entity_id",
+            "entity_type"
+          ],
+          "columnsTo": [
+            "id",
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "companies_entity_type_is_company": {
+          "name": "companies_entity_type_is_company",
+          "value": "\"companies\".\"entity_type\" = 'COMPANY'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.email_domains": {
+      "name": "email_domains",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "company_entity_id": {
+          "name": "company_entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "domain": {
+          "name": "domain",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "email_domains_company_entity_id_companies_entity_id_fk": {
+          "name": "email_domains_company_entity_id_companies_entity_id_fk",
+          "tableFrom": "email_domains",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_entity_id"
+          ],
+          "columnsTo": [
+            "entity_id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "email_domains_domain_unique": {
+          "name": "email_domains_domain_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "domain"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.email_usernames": {
+      "name": "email_usernames",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email_domain_id": {
+          "name": "email_domain_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "entity_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "email_usernames_email_domain_id_email_domains_id_fk": {
+          "name": "email_usernames_email_domain_id_email_domains_id_fk",
+          "tableFrom": "email_usernames",
+          "tableTo": "email_domains",
+          "columnsFrom": [
+            "email_domain_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "email_usernames_entity_id_entity_type_entities_id_type_fk": {
+          "name": "email_usernames_entity_id_entity_type_entities_id_type_fk",
+          "tableFrom": "email_usernames",
+          "tableTo": "entities",
+          "columnsFrom": [
+            "entity_id",
+            "entity_type"
+          ],
+          "columnsTo": [
+            "id",
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "email_usernames_username_emailDomainId_unique": {
+          "name": "email_usernames_username_emailDomainId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username",
+            "email_domain_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "email_usernames_person_or_company": {
+          "name": "email_usernames_person_or_company",
+          "value": "\"email_usernames\".\"entity_type\" in ('PERSON', 'COMPANY')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.employment_history": {
+      "name": "employment_history",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "person_entity_id": {
+          "name": "person_entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_entity_id": {
+          "name": "company_entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "confirmed_start": {
+          "name": "confirmed_start",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estimated_start": {
+          "name": "estimated_start",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "confirmed_end": {
+          "name": "confirmed_end",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estimated_end": {
+          "name": "estimated_end",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "employment_history_person_entity_id_people_entity_id_fk": {
+          "name": "employment_history_person_entity_id_people_entity_id_fk",
+          "tableFrom": "employment_history",
+          "tableTo": "people",
+          "columnsFrom": [
+            "person_entity_id"
+          ],
+          "columnsTo": [
+            "entity_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "employment_history_company_entity_id_companies_entity_id_fk": {
+          "name": "employment_history_company_entity_id_companies_entity_id_fk",
+          "tableFrom": "employment_history",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_entity_id"
+          ],
+          "columnsTo": [
+            "entity_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.entities": {
+      "name": "entities",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "entity_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "entities_id_type_unique": {
+          "name": "entities_id_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "type"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "entities_id_prefix_matches_type": {
+          "name": "entities_id_prefix_matches_type",
+          "value": "(\"entities\".\"type\" = 'PERSON' and starts_with(\"entities\".\"id\", 'person_'))\n        or (\"entities\".\"type\" = 'COMPANY' and starts_with(\"entities\".\"id\", 'company_'))"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.linkedin_profiles": {
+      "name": "linkedin_profiles",
+      "schema": "",
+      "columns": {
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "entity_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "linkedin_url": {
+          "name": "linkedin_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "json_blob": {
+          "name": "json_blob",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "linkedin_profiles_entity_id_entity_type_entities_id_type_fk": {
+          "name": "linkedin_profiles_entity_id_entity_type_entities_id_type_fk",
+          "tableFrom": "linkedin_profiles",
+          "tableTo": "entities",
+          "columnsFrom": [
+            "entity_id",
+            "entity_type"
+          ],
+          "columnsTo": [
+            "id",
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "linkedin_profiles_linkedinUrl_unique": {
+          "name": "linkedin_profiles_linkedinUrl_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "linkedin_url"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "linkedin_profiles_person_or_company": {
+          "name": "linkedin_profiles_person_or_company",
+          "value": "\"linkedin_profiles\".\"entity_type\" in ('PERSON', 'COMPANY')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.note_links": {
+      "name": "note_links",
+      "schema": "",
+      "columns": {
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_id": {
+          "name": "note_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "note_links_entity_id_entities_id_fk": {
+          "name": "note_links_entity_id_entities_id_fk",
+          "tableFrom": "note_links",
+          "tableTo": "entities",
+          "columnsFrom": [
+            "entity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "note_links_note_id_notes_id_fk": {
+          "name": "note_links_note_id_notes_id_fk",
+          "tableFrom": "note_links",
+          "tableTo": "notes",
+          "columnsFrom": [
+            "note_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "note_links_entity_id_note_id_pk": {
+          "name": "note_links_entity_id_note_id_pk",
+          "columns": [
+            "entity_id",
+            "note_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notes": {
+      "name": "notes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.people": {
+      "name": "people",
+      "schema": "",
+      "columns": {
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "entity_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PERSON'"
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "people_entity_id_entity_type_entities_id_type_fk": {
+          "name": "people_entity_id_entity_type_entities_id_type_fk",
+          "tableFrom": "people",
+          "tableTo": "entities",
+          "columnsFrom": [
+            "entity_id",
+            "entity_type"
+          ],
+          "columnsTo": [
+            "id",
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "people_entity_type_is_person": {
+          "name": "people_entity_type_is_person",
+          "value": "\"people\".\"entity_type\" = 'PERSON'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.phones": {
+      "name": "phones",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "number": {
+          "name": "number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "entity_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "phones_entity_id_entity_type_entities_id_type_fk": {
+          "name": "phones_entity_id_entity_type_entities_id_type_fk",
+          "tableFrom": "phones",
+          "tableTo": "entities",
+          "columnsFrom": [
+            "entity_id",
+            "entity_type"
+          ],
+          "columnsTo": [
+            "id",
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "phones_person_or_company": {
+          "name": "phones_person_or_company",
+          "value": "\"phones\".\"entity_type\" in ('PERSON', 'COMPANY')"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.entity_type": {
+      "name": "entity_type",
+      "schema": "public",
+      "values": [
+        "COMPANY",
+        "PERSON"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
